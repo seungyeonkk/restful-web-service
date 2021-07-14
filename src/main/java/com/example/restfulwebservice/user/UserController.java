@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -32,13 +33,15 @@ public class UserController {
     }
 
     @PostMapping(path = "/users")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) { // @Valid로 user 변수 validation 체크를 함
         User savedUser = service.save(user);
         // header에 location : http://localhost:8080/users/4 반환
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(savedUser.getId())
                 .toUri();
+
+
         return ResponseEntity.created(location).build();
     }
 
